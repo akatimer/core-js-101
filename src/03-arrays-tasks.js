@@ -422,8 +422,13 @@ function toStringList(arr) {
  *      { country: 'Russia',  city: 'Saint Petersburg' }
  *    ]
  */
-function sortCitiesArray(/* arr */) {
-  throw new Error('Not implemented');
+function sortCitiesArray(arr) {
+  return arr.sort((a, b) => {
+    if (a.country === b.country) {
+      return a.city.localeCompare(b.city);
+    }
+    return a.country.localeCompare(b.country);
+  });
 }
 
 /**
@@ -444,8 +449,13 @@ function sortCitiesArray(/* arr */) {
  *           [0,0,0,1,0],
  *           [0,0,0,0,1]]
  */
-function getIdentityMatrix(/* n */) {
-  throw new Error('Not implemented');
+function getIdentityMatrix(n) {
+  return Array.from({ length: n }, (_, i) => Array.from({ length: n }, (a, j) => {
+    if (i === j) {
+      return 1;
+    }
+    return 0;
+  }));
 }
 
 /**
@@ -461,8 +471,8 @@ function getIdentityMatrix(/* n */) {
  *     0, 100 => [ 0, 1, 2, ..., 100 ]
  *     3, 3   => [ 3 ]
  */
-function getIntervalArray(/* start, end */) {
-  throw new Error('Not implemented');
+function getIntervalArray(start, end) {
+  return Array.from({ length: Math.abs(start - end) + 1 }, (_, i) => start + i);
 }
 
 /**
@@ -476,8 +486,12 @@ function getIntervalArray(/* start, end */) {
  *   [ 'a', 'a', 'a', 'a' ]  => [ 'a' ]
  *   [ 1, 1, 2, 2, 3, 3, 4, 4] => [ 1, 2, 3, 4]
  */
-function distinct(/* arr */) {
-  throw new Error('Not implemented');
+function distinct(arr) {
+  return arr.reduce((accum, value) => {
+    if (!accum.includes(value)) {
+      accum.push(value);
+    } return accum;
+  }, []);
 }
 
 /**
@@ -510,8 +524,18 @@ function distinct(/* arr */) {
  *    "Poland" => ["Lodz"]
  *   }
  */
-function group(/* array, keySelector, valueSelector */) {
-  throw new Error('Not implemented');
+function group(array, keySelector, valueSelector) {
+  return array.reduce((map, item) => {
+    const key = keySelector(item);
+    const value = valueSelector(item);
+
+    if (map.has(key)) {
+      map.get(key).push(value);
+    } else {
+      map.set(key, [value]);
+    }
+    return map;
+  }, new Map());
 }
 
 
@@ -528,8 +552,8 @@ function group(/* array, keySelector, valueSelector */) {
  *   [[1, 2], [3, 4], [5, 6]], (x) => x     =>   [ 1, 2, 3, 4, 5, 6 ]
  *   ['one','two','three'], (x) => x.split('')  =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
-function selectMany(/* arr, childrenSelector */) {
-  throw new Error('Not implemented');
+function selectMany(arr, childrenSelector) {
+  return arr.reduce((acum, value) => acum.concat(childrenSelector(value)), []);
 }
 
 
@@ -545,8 +569,8 @@ function selectMany(/* arr, childrenSelector */) {
  *   ['one','two','three'], [2]       => 'three'  (arr[2])
  *   [[[ 1, 2, 3]]], [ 0, 0, 1 ]      => 2        (arr[0][0][1])
  */
-function getElementByIndexes(/* arr, indexes */) {
-  throw new Error('Not implemented');
+function getElementByIndexes(arr, indexes) {
+  return indexes.reduce((acum, value) => acum[value], arr);
 }
 
 
@@ -568,8 +592,40 @@ function getElementByIndexes(/* arr, indexes */) {
  *   [ 1, 2, 3, 4, 5, 6, 7, 8 ]   =>  [ 5, 6, 7, 8, 1, 2, 3, 4 ]
  *
  */
-function swapHeadAndTail(/* arr */) {
-  throw new Error('Not implemented');
+function swapHeadAndTail(arr) {
+  if (arr.length <= 1) {
+    return arr;
+  }
+  return arr.reduce((acum, value) => {
+    if (arr.indexOf(value) >= arr.length / 2) {
+      acum.push(value);
+    }
+    return acum;
+  }, []).concat(arr.reduce((acum, value) => {
+    if (arr.length % 2 > 0 && arr.indexOf(value) === Math.floor(arr.length / 2)) {
+      acum.push(value);
+    } return acum;
+  }, [])).concat(arr.reduce((acum, value) => {
+    if (arr.indexOf(value) <= ((arr.length / 2) - 1)) {
+      acum.push(value);
+    } return acum;
+  }, []));
+
+
+  //   else if (arr.length % 2 > 0 && arr.indexOf(value) === Math.floor(arr.length / 2) + 1) {
+  //     console.log('middle', value);
+  //     acum.unshift(value);
+  //   } else {
+  //     console.log('tail', value);
+  //     acum.unshift(value);
+  //   } return acum;
+  // }, []);
+  // const tail = arr.reduce((acum, value) => {
+  //   if (arr.indexOf(value) > Math.floor(arr.length / 2)) {
+  //     acum.push(value);
+  //   } return acum;
+  // }, []);
+  // return tail.concat(head);
 }
 
 
